@@ -1,8 +1,54 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import styles from "../styles/Home.module.css";
+import Lottie from "react-lottie";
+
+import animationData from "../src/lottie/natural-landing-page.json";
+
+import logo from "../public/CapstoneLogo.png";
+import Link from "next/link";
 
 export default function Home() {
+  // const [data, setData] = useState([]);
+  // const [isLoading, setLoading] = useState(false);
+  const [windowH, setWindowH] = useState(window.innerHeight);
+  const [windowW, setWindowW] = useState(window.innerWidth);
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
+  const updateDimensions = () => {
+    setWindowW(window.innerWidth);
+    setWindowH(window.innerHeight);
+  };
+  useEffect(() => {
+    window.addEventListener("resize", updateDimensions);
+    return () => window.removeEventListener("resize", updateDimensions);
+  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:3600/students", {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((_data) => {
+  //       setData(_data);
+  //       console.log(_data);
+  //       setLoading(false);
+  //     });
+  //   setLoading(true);
+  // }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -11,59 +57,28 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+      {/* {data.map(({ firstName, lastName, enrolmentStatus }) => (
+          <>
+            hi {firstName} {lastName} your status is {enrolmentStatus}
+          </>
+        ))} */}
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
+      <Lottie options={defaultOptions} height={windowH} width={windowW} />
+      <div className={styles.landing}>
+        <Image width={400} height={400} alt="logo" src={logo} />
+        <p className={styles.lead}>
+          A friendly platform that will make college enrolment more that just
+          simplistic
         </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className={styles.btns}>
+          <Link href="/login" passHref>
+            <button className={styles.btn}>Login as Student</button>
+          </Link>
+          <Link href="/login" passHref>
+            <button className={styles.btn}>Login as Admin Officer</button>
+          </Link>
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+      </div>
     </div>
-  )
+  );
 }
