@@ -1,21 +1,22 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import styles from "../styles/Home.module.css";
+import styles from "../../styles/Home.module.css";
 import Lottie from "react-lottie";
-
-import animationData from "../src/lottie/natural-landing-page.json";
-
-import logo from "../public/CapstoneLogo.png";
-import Link from "next/link";
+import animationData from "../../src/lottie/natural-landing-page.json";
+import logo from "../../public/CapstoneLogo.png";
 import { useRouter } from "next/router";
 
 export default function Login() {
   const router = useRouter();
-  const [windowH, setWindowH] = useState(window.innerHeight);
-  const [windowW, setWindowW] = useState(window.innerWidth);
+  const { user } = router.query;
+
+  const [windowH, setWindowH] = useState(null);
+  const [windowW, setWindowW] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  console.log(user);
 
   const defaultOptions = {
     loop: true,
@@ -48,11 +49,15 @@ export default function Login() {
 
   const login = () => {
     alert(`Login with \n Username : ${username} \n Password : ${password}`);
-    fetch("http://localhost:3600/students/login", requestOptions)
+    fetch(`http://localhost:3600/${user}/login`, requestOptions)
       .then((res) => res.text())
       .then((data) => {
         console.log(data);
-        router.push(`/dashboard/${data}`);
+        if (user === "students") {
+          router.push(`/dashboard/students/${data}`);
+        } else {
+          router.push(`/dashboard/admins/${data}`);
+        }
       })
       .catch((error) => console.error(error));
   };
@@ -66,9 +71,13 @@ export default function Login() {
 
       <Lottie options={defaultOptions} height={windowH} width={windowW} />
       <div className={styles.landing}>
-        <Link href="/" passHref>
-          <Image width={400} height={400} alt="logo" src={logo} />
-        </Link>
+        <Image
+          width={400}
+          height={400}
+          alt="logo"
+          src={logo}
+          onClick={() => router.push("/")}
+        />
 
         <div className={styles.loginForm}>
           <form className={styles.form} autoComplete="off">

@@ -3,17 +3,14 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 import Lottie from "react-lottie";
-
 import animationData from "../src/lottie/natural-landing-page.json";
-
 import logo from "../public/CapstoneLogo.png";
-import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Home() {
-  // const [data, setData] = useState([]);
-  // const [isLoading, setLoading] = useState(false);
-  const [windowH, setWindowH] = useState(window.innerHeight);
-  const [windowW, setWindowW] = useState(window.innerWidth);
+  const [windowH, setWindowH] = useState(null);
+  const [windowW, setWindowW] = useState(null);
+  const router = useRouter();
 
   const defaultOptions = {
     loop: true,
@@ -32,23 +29,14 @@ export default function Home() {
     window.addEventListener("resize", updateDimensions);
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
-  // useEffect(() => {
-  //   fetch("http://localhost:3600/students", {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //     },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((_data) => {
-  //       setData(_data);
-  //       console.log(_data);
-  //       setLoading(false);
-  //     });
-  //   setLoading(true);
-  // }, []);
 
+  const loginAsStudent = () => {
+    router.push("/login/students");
+  };
+
+  const loginAsAdmin = () => {
+    router.push("/login/administrator");
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -65,18 +53,25 @@ export default function Home() {
 
       <Lottie options={defaultOptions} height={windowH} width={windowW} />
       <div className={styles.landing}>
-        <Image width={400} height={400} alt="logo" src={logo} />
+        <Image
+          width={400}
+          height={400}
+          alt="logo"
+          src={logo}
+          onClick={() => router.push("/")}
+        />
+
         <p className={styles.lead}>
           A friendly platform that will make college enrolment more that just
           simplistic
         </p>
         <div className={styles.btns}>
-          <Link href="/login" passHref>
-            <button className={styles.btn}>Login as Student</button>
-          </Link>
-          <Link href="/login" passHref>
-            <button className={styles.btn}>Login as Admin Officer</button>
-          </Link>
+          <button className={styles.btn} onClick={loginAsStudent}>
+            Login as Student
+          </button>
+          <button className={styles.btn} onClick={loginAsAdmin}>
+            Login as Admin Officer
+          </button>
         </div>
       </div>
     </div>
